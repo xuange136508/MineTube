@@ -1,0 +1,20 @@
+{
+  "float": [
+    {
+      "name": "common_border_width",
+      "value": "0.5vp"
+    },
+    {
+      "name": "hd_list_load_height",
+      "value": "80vp"
+    },
+    {
+      "name": "hd_list_load_font",
+      "value": "14fp"
+    },
+    {
+      "name": "hd_list_load_icon",
+      "value": "24vp"
+    }
+  ]
+}
