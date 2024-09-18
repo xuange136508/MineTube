@@ -7,6 +7,12 @@
     {
       "name": "common_gray_border",
       "value": "#e8e7ee"
+    },
+
+    {
+      "name": "common_bg",
+      "value": "#F7F7F7"
     }
+
   ]
 }

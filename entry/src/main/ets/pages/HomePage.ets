@@ -1,5 +1,11 @@
+import { GridAttr, GridView,
+  LoadMoreLayoutStatusModel,
+  RefreshController, RefreshDataSource, RefreshLayoutStatusModel } from '@abner/refresh'
+import { it } from '@ohos/hypium'
 import { SIZE } from '@ohos/hypium/src/main/Constant'
 import { SpecList, SpecListController } from '../base/SpecList'
+import { VideoGridItem } from '../component/VideoGridItem'
+import { ToastUtil } from '@pura/harmony-utils'
 
 @Component
 export struct HomePage {
@@ -23,10 +29,43 @@ export struct HomePage {
   @State
   list: Array<string> = []
 
+  //刷新控制器
+  refreshController: RefreshController = new RefreshController()
+  array: Array<number> = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+  array2: Array<number> = [12, 13, 14, 15, 16, 17, 18, 19, 20, 21]
+  lazyDataSource: RefreshDataSource = new RefreshDataSource()
+
+  /**
+   * Author:AbnerMing
+   * Describe:自定义刷新头
+   */
+  @Builder
+  headerRefreshLayout(model: RefreshLayoutStatusModel) {
+    Text("当前状态：" + model.status)
+      .width("100%")
+      .textAlign(TextAlign.Center)
+      .height(80)
+      .backgroundColor(Color.Pink)
+  }
+
+  /**
+   * Author:AbnerMing
+   * Describe:自定义加载尾部
+   */
+  @Builder
+  footerLoadLayout(model: LoadMoreLayoutStatusModel) {
+    Text("当前状态：" + model.status)
+      .width("100%")
+      .textAlign(TextAlign.Center)
+      .height(80)
+      .backgroundColor(Color.Pink)
+  }
+
   aboutToAppear(): void {
-    for(let index = 0; index<30; index++){
+    for(let index = 0; index<10; index++){
       this.list.push(index.toString())
     }
+    this.lazyDataSource.pushDataArray(this.array)
   }
 
   scrollStatusBar(y: number) {
@@ -62,8 +101,12 @@ export struct HomePage {
             Row() {
               Image($r('app.media.startIcon'))
                 .size({ width: 25, height: 25 })
+                .margin({left:10})
               Row() {
-                Image($r('app.media.icon_search_small')).width(20).height(20).margin({ left: 10, right: 2 })
+                Image($r('app.media.icon_search_small'))
+                  .width(20)
+                  .height(20)
+                  .margin({left:10})
                   .onClick(() => {
                     console.log('icon_search_small.url:')
                   })
@@ -71,12 +114,14 @@ export struct HomePage {
                 TextInput({
                   placeholder: '地下城与与勇士手游',
                 })
+                  .borderRadius(0)
+                  .layoutWeight(1)
                   .backgroundColor(Color.Transparent)
                   .margin({ right: 5 })
                   .fontWeight(FontWeight.Normal)
-                  .fontSize(10)
+                  .fontSize(12)
                   .placeholderColor(Color.Black)
-                  .placeholderFont({ size: 10, weight: FontWeight.Normal })
+                  .placeholderFont({ size: 12, weight: FontWeight.Normal })
                   .type(InputType.Normal)
                   .onChange((value: string) => {
                     this.text = value
@@ -89,13 +134,19 @@ export struct HomePage {
               .border({ width: 1 })
               .borderRadius(30)
               .backgroundColor('#99FFFFFF')
-              .margin({top:2, bottom:2})
-              .width('70%')
+              .margin({top:2, bottom:2, left:20, right:20})
+              .layoutWeight(1)
               .height(30)
 
               Image($r('app.media.startIcon'))
-                .size({ width: 25, height: 25 })
+                .width(25)
+                .height('auto')
+                .margin({right:10})
+                .visibility(Visibility.Visible)
             }
+            .width('100%')
+            .alignItems(VerticalAlign.Center)
+            .justifyContent(FlexAlign.SpaceBetween)
           }.onAreaChange((_o, n) => {
             this.areaHeight = n.height as number
           })
@@ -108,25 +159,77 @@ export struct HomePage {
                 (item: string, index: number) => {
                   TabContent() {
                     Column() {
-                      // 下拉刷新列表
-                      SpecList({
-                        controller: this.controller,
-                        onLoad: () => {
-                          this.onLoad()
+                      // 懒加载样式
+                      GridView({
+                        lazyDataSource: this.lazyDataSource,
+                        itemLayout: this.itemLayout,
+                        controller: this.refreshController,
+                        lazyCachedCount: 10,
+                        gridAttribute: (g) => {
+                          g.rowsGap = 10 //设置行间距
+                          g.columnsGap = 10
                         },
+                        headerRefreshLayout: this.headerRefreshLayout,
+                        footerLoadLayout: this.footerLoadLayout,
                         onRefresh: () => {
-                          this.onRefresh()
+                          setTimeout(() => {
+                            this.lazyDataSource.deleteAll(() => {
+                              this.lazyDataSource.pushDataArray([500, 501, 502, 503, 504, 505])
+                            })
+                            this.refreshController.finishRefresh()
+                          }, 1000)
+                        },
+                        onLoadMore: () => {
+                          setTimeout(() => {
+                            this.lazyDataSource.pushDataArray(this.array2)
+                            this.refreshController.finishLoadMore()
+                          }, 1000)
                         }
-                      }) {
-                        ForEach(this.list, (item: string) => {
-                          ListItem() {
-                            Column(){
-                              Text(item)
-                            }.height(50)
-                          }
-                        })
-                      }
+                      }).margin({top:10, left: 5, right: 5})
+
+                      //  普通样式
+                      // GridView({
+                      //   items: this.list,
+                      //   enableRefresh: true,
+                      //   enableLoadMore: true,
+                      //   gridAttribute: (attr) => {
+                      //     attr.rowsGap = 5;
+                      //     attr.columnsGap = 5;},
+                      //   itemLayout: (item, index) => this.itemLayout(item, index),
+                      //   controller: this.refreshController, //控制器，负责关闭下拉和上拉
+                      //   isLazyData: false,//禁止懒加载，使用ForEach进行数据加载
+                      //   onRefresh: () => {
+                      //     //下拉刷新
+                      //     this.refreshController.finishRefresh();
+                      //     ToastUtil.showToast("下拉刷新")
+                      //   },
+                      //   onLoadMore: () => {
+                      //     //上拉加载
+                      //     this.refreshController.finishLoadMore();
+                      //     ToastUtil.showToast("上拉加载")
+                      //   }
+                      // }).margin({left: 5, right: 5})
+
+                      // 下拉刷新列表
+                      // SpecList({
+                      //   controller: this.controller,
+                      //   onLoad: () => {
+                      //     this.onLoad()
+                      //   },
+                      //   onRefresh: () => {
+                      //     this.onRefresh()
+                      //   }
+                      // }) {
+                      //   ForEach(this.list, (item: string) => {
+                      //     ListItem() {
+                      //       Column(){
+                      //         VideoGridItem({videoBean:item})
+                      //       }
+                      //     }
+                      //   })
+                      // }
                     }
+                    .backgroundColor($r('app.color.common_bg'))
                   }.tabBar(this.TabItemBuilder(item, index))
                 })
             }
@@ -153,6 +256,12 @@ export struct HomePage {
       })
     }
 
+  }
+
+
+  @Builder
+  itemLayout(item: Object, index: number): void {
+      VideoGridItem({videoBean:item as string})
   }
 
   @State homeTabIndex: number = 0
