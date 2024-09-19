@@ -6,6 +6,7 @@ import { SIZE } from '@ohos/hypium/src/main/Constant'
 import { SpecList, SpecListController } from '../base/SpecList'
 import { VideoGridItem } from '../component/VideoGridItem'
 import { ToastUtil } from '@pura/harmony-utils'
+import { PageRouterUtils } from '../router/PageRouterUtils'
 
 @Component
 export struct HomePage {
@@ -261,7 +262,11 @@ export struct HomePage {
 
   @Builder
   itemLayout(item: Object, index: number): void {
-      VideoGridItem({videoBean:item as string})
+      VideoGridItem({videoBean:item as string}).onClick(()=>{
+        PageRouterUtils.getInstance().goToPlayDetail("", (popInfo) => {
+          const result = popInfo.result as object
+        })
+      })
   }
 
   @State homeTabIndex: number = 0

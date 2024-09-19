@@ -1,4 +1,5 @@
 import { HomePage } from './HomePage';
+import { router } from '@kit.ArkUI';
 
 @Entry
 @Component
@@ -24,49 +25,71 @@ struct Index {
   }
 
   build() {
-    Column() {
-      Tabs({ barPosition: BarPosition.End }) {
-        TabContent() {
-          Column(){
-            HomePage()
+    Navigation(this.pageInfo) {
+      Column() {
+        Tabs({ barPosition: BarPosition.End }) {
+          TabContent() {
+            Column(){
+              HomePage()
+            }
+            .width('100%')
+            .height('100%')
+            .backgroundColor('#FFFFFF')
           }
-          .width('100%')
-          .height('100%')
-          .backgroundColor('#FFFFFF')
-        }
-        .tabBar(this.tabBuilder('首页', 0, $r('app.media.app_icon'), $r('app.media.app_icon')))
-        TabContent() {
-          Column(){
-            Text('2')
+          .tabBar(this.tabBuilder('首页', 0, $r('app.media.app_icon'), $r('app.media.app_icon')))
+          TabContent() {
+            Column(){
+              Text('2')
+            }
+            .width('100%')
+            .height('100%')
+            .backgroundColor('#FFFFFF')
           }
-          .width('100%')
-          .height('100%')
-          .backgroundColor('#FFFFFF')
-        }
-        .tabBar(this.tabBuilder('动态', 1, $r('app.media.app_icon'), $r('app.media.app_icon')))
-        TabContent() {
-          Column(){
-            Text('3')
+          .tabBar(this.tabBuilder('动态', 1, $r('app.media.app_icon'), $r('app.media.app_icon')))
+          TabContent() {
+            Column(){
+              Text('3')
+            }
+            .width('100%')
+            .height('100%')
+            .backgroundColor('#000000')
           }
-          .width('100%')
-          .height('100%')
-          .backgroundColor('#000000')
+          .tabBar(this.tabBuilder('我的', 2, $r('app.media.app_icon'), $r('app.media.app_icon')))
         }
-        .tabBar(this.tabBuilder('我的', 2, $r('app.media.app_icon'), $r('app.media.app_icon')))
-      }
-      .scrollable(false)
-      .animationDuration(0)
-      .backgroundColor('#F1F3F5')
-      .onChange((index: number) => {
-        this.currentIndex = index
-      })
-    }.width('100%')
+        .scrollable(false)
+        .animationDuration(0)
+        .backgroundColor('#F1F3F5')
+        .onChange((index: number) => {
+          this.currentIndex = index
+        })
+      }.width('100%')
+    }
+    .hideTitleBar(true)
   }
 
-  aboutToAppear(): void {
-  }
 
   aboutToDisappear(): void {
   }
+  pageInfo: NavPathStack = new NavPathStack()
 
+  // 组件生命周期
+  aboutToAppear() {
+    router.clear();
+    AppStorage.setOrCreate("pageInfo", this.pageInfo)
+
+    this.pageInfo.setInterception({
+      // 页面路由拦截器
+      willShow: (from: NavDestinationContext | "navBar", to: NavDestinationContext | "navBar",
+        operation: NavigationOperation, animated: boolean) => {
+        // 离开首页
+        if (typeof from === "string") {
+          return;
+        }
+        // 进入首页
+        if (typeof to === "string") {
+          return;
+        }
+      }
+    })
+  }
 }
