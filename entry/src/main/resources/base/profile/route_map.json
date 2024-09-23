@@ -1,0 +1,12 @@
+{
+  "routerMap": [
+    {
+      "name": "PagePlayDetail",
+      "pageSourceFile": "src/main/ets/pages/PagePlayDetail.ets",
+      "buildFunction": "PageBuilder",
+      "data": {
+        "pageDescription": "播放详情页"
+      }
+    }
+  ]
+}

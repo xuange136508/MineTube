@@ -17,3 +17,10 @@ export class PageParam{
     this.map = map
   }
 }
+
+export class PageResult{
+  map:Map<string,Object>
+  constructor(map: Map<string,Object>) {
+    this.map = map
+  }
+}

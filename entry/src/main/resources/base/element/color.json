@@ -12,7 +12,15 @@
     {
       "name": "common_bg",
       "value": "#F7F7F7"
-    }
+    },
 
+    {
+      "name": "white",
+      "value": "#FFFFFF"
+    },
+    {
+      "name": "black",
+      "value": "#000000"
+    }
   ]
 }

@@ -7,6 +7,8 @@ import { SpecList, SpecListController } from '../base/SpecList'
 import { VideoGridItem } from '../component/VideoGridItem'
 import { ToastUtil } from '@pura/harmony-utils'
 import { PageRouterUtils } from '../router/PageRouterUtils'
+import ToastCustomUtil from '../utils/ToastCustomUtil'
+import { PageResult } from '../router/PageRouter'
 
 @Component
 export struct HomePage {
@@ -263,8 +265,9 @@ export struct HomePage {
   @Builder
   itemLayout(item: Object, index: number): void {
       VideoGridItem({videoBean:item as string}).onClick(()=>{
-        PageRouterUtils.getInstance().goToPlayDetail("", (popInfo) => {
-          const result = popInfo.result as object
+        PageRouterUtils.getInstance().goToPlayDetail("123", (popInfo) => {
+          const result = popInfo.result as PageResult
+          ToastCustomUtil.showToast("回调数据:"+result.map.get("result_message"))
         })
       })
   }

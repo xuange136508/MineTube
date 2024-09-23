@@ -18,7 +18,10 @@
     ],
     "deliveryWithInstall": true,
     "installationFree": false,
+    // 应用组件中的页面信息
     "pages": "$profile:main_pages",
+    // 配置路由表(可以是@Entry或@Component)
+    "routerMap": "$profile:route_map",
     "abilities": [
       {
         "name": "EntryAbility",
