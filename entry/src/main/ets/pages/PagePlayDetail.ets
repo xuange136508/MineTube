@@ -1,3 +1,6 @@
+import { decode, Decoder, encode, Encoder } from '@ohos/msgpack';
+import { JSONUtil } from '@pura/harmony-utils';
+import { ImageComponent } from '../common/imageknife/ImageComponent';
 import { SystemCommonVideo } from '../common/player/system/SystemCommonVideo';
 import { VideoParams, VideosBean } from '../common/player/system/VideoParams';
 import { PageParam } from '../router/PageRouter';
@@ -27,6 +30,19 @@ export struct PagePlayDetail {
       11,
       'https://vimg.cdnmama.com/lp/2024/09/20/46eeb57e6fb54eef963a03419351de08.jpg?imageView2/3/w/750'
     )])
+
+
+    //MessagePack 是一个提供高效对象序列化的库。它与 JSON 类似，但提供更高的效率和更小的数据量。
+    // 目前，MessagePack 3.0 可用于实现复杂的 int64 编码。
+    // Json编码
+    let encoder = new Encoder()
+    let encoded: Uint8Array = encoder.encode(this.videoParams);
+    // Json解码
+    let decoder = new Decoder()
+    let decodedObject = decoder.decode(encoded) as VideoParams;
+
+    let reportBean = JSONUtil.beanToJsonStr(decodedObject);
+    console.info(reportBean);
   }
 
   build() {
@@ -46,7 +62,15 @@ export struct PagePlayDetail {
         //VideoNewsView()
 
         //系统播放器
-        SystemCommonVideo({videoParams: this.videoParams})
+        //SystemCommonVideo({videoParams: this.videoParams})
+
+        //图片加载
+        //https://ohpm.openharmony.cn/#/cn/detail/@ohos%2Fimageknife
+        ImageComponent({ loadSrc: img, objectFIt: ImageFit.Cover }).width(46).height(46).margin({top:50})
+        //默认
+        Image(img).width(46).height(46)
+          .objectFit(ImageFit.Cover)
+          .borderRadius({topLeft:10,topRight:10,bottomLeft:0,bottomRight:0 })
 
       }.width('100%').height('100%')
     }
@@ -72,3 +96,5 @@ export struct PagePlayDetail {
   }
 
 }
+
+let img = 'https://p3.toutiaoimg.com/tos-cn-i-qvj2lq49k0/c4e6881ba59e4d61916faca062d8de6c~noop.image'
