@@ -22,6 +22,67 @@
     {
       "name": "hd_list_finished",
       "value": "没有更多了~"
+    },
+
+    {
+      "name": "camera",
+      "value": "我们正在向您申请相机权限，用于扫码、拍照、修改头像等"
+    },
+    {
+      "name": "access_bluetooth",
+      "value": "我们正在向您申请蓝牙权限，用于配对、连接外围设备"
+    },
+    {
+      "name": "media_location",
+      "value": "我们正在向您申请图片与视频权限，用于读取媒体文件的位置信息"
+    },
+    {
+      "name": "app_tracking_consent",
+      "value": "我们正在向您申请开放匿名设备标识符权限，用于允许应用读取开放匿名设备标识符"
+    },
+    {
+      "name": "activity_motion",
+      "value": "我们正在向您申请健身运动权限权限，用于记录步数"
+    },
+    {
+      "name": "distributed_datasync",
+      "value": "我们正在向您申请多设备协同权限，用于跨端迁移和多端协同"
+    },
+    {
+      "name": "location_in_background",
+      "value": "我们正在向您申请后台定位权限，用于后台定位"
+    },
+    {
+      "name": "location",
+      "value": "我们正在向您申请位置权限，用于定位"
+    },
+    {
+      "name": "approximately_location",
+      "value": "我们正在向您申请模糊位置权限，用于模糊定位"
+    },
+    {
+      "name": "microphone",
+      "value": "我们正在向您申请麦克风权限，用于语音输入以及语音录制"
+    },
+    {
+      "name": "read_calendar",
+      "value": "我们正在向您申请日历权限，用于获取日历信息"
+    },
+    {
+      "name": "write_calendar",
+      "value": "我们正在向您申请日历权限，用于保存日历信息"
+    },
+    {
+      "name": "read_health_data",
+      "value": "我们正在向您申请身体传感器权限，用于读取健康数据权限"
+    },
+    {
+      "name": "read_media",
+      "value": "我们正在向您申请文件权限，用于读取媒体文件信息"
+    },
+    {
+      "name": "write_media",
+      "value": "我们正在向您申请文件权限，用于保存媒体文件信息"
     }
   ]
 }

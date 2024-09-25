@@ -4,6 +4,8 @@ import { hilog } from '@kit.PerformanceAnalysisKit';
 import { window } from '@kit.ArkUI';
 import { ImageKnife } from '@ohos/imageknife';
 import { MMKV } from '@tencent/mmkv';
+import { SpinKitHelper } from '@pura/spinkit';
+import { SpinType } from '@pura/spinkit';
 
 export default class EntryAbility extends UIAbility {
   onCreate(want: Want, launchParam: AbilityConstant.LaunchParam): void {
@@ -12,6 +14,18 @@ export default class EntryAbility extends UIAbility {
     ImageKnife.getInstance().initFileCache(this.context, 256, 256 * 1024 * 1024)
 
     MMKV.initialize(this.context.getApplicationContext())
+
+    //设置全局统一样式，在UIAbility的onCreate方法里初始化
+    SpinKitHelper.setGlobalConfig((config) => {
+      config.uiContext = this.context  //必须初始化上下文
+      config.spinType = SpinType.spinC
+      config.spinSize = 60
+      config.spinColor = '#FFFFFF'
+      config.backgroundColor = '#CC000000'
+      config.borderRadius = 10
+      config.maskColor = '#22000000'
+      config.autoCancel = false
+    })
   }
 
   onDestroy(): void {
